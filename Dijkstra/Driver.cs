@@ -129,6 +129,7 @@ namespace Dijkstra {
 
                 Console.Write(V_PROMPT);
                 string answer = Console.ReadLine();
+                Console.WriteLine();
 
                 try {
                     return YNParse(answer);
