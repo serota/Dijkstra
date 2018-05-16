@@ -32,7 +32,6 @@ namespace Dijkstra {
         const int ALLOWANCE = 5;
         static int attempt = 0;
 
-        static bool v = false;
         static int n = 0,
             w = 0,
             s = 0,
@@ -40,6 +39,8 @@ namespace Dijkstra {
         static double p = 0;
 
         static void Main(string[] args) {
+            bool v = false;
+
             try {
                 v = NextYN(V_PROMPT);
             }
