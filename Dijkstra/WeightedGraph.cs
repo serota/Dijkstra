@@ -183,7 +183,7 @@ namespace Dijkstra {
         }
 
         public int CompareTo(Path path) {
-            return this.Length.CompareTo(path.Length);
+            return Length.CompareTo(path.Length);
         }
 
         public override string ToString() {
@@ -214,11 +214,11 @@ namespace Dijkstra {
         }
 
         public int CompareTo(Node node) {
-            if (this.Path.CompareTo(node.Path) == 0) {
-                return this.Name.CompareTo(node.Name);
+            if (Path.CompareTo(node.Path) == 0) {
+                return Name.CompareTo(node.Name);
             }
 
-            return this.Path.CompareTo(node.Path);
+            return Path.CompareTo(node.Path);
         }
 
         public override string ToString() {
