@@ -87,14 +87,14 @@ namespace Dijkstra {
         static void CollectPathInputs() {
             attempt = 0;
             do {
-                RetriesCheck(S_RETRY);
+                ExcessiveBoundsChecker(S_RETRY);
                 s = NextInt(S_PROMPT);
                 attempt++;
             } while (s < 0 || s >= n);
 
             attempt = 0;
             do {
-                RetriesCheck(F_RETRY);
+                ExcessiveBoundsChecker(F_RETRY);
                 f = NextInt(F_PROMPT);
                 attempt++;
             } while (f < 0 || f >= n);
@@ -103,27 +103,27 @@ namespace Dijkstra {
         static void CollectGraphInputs() {
             attempt = 0;
             do {
-                RetriesCheck(N_RETRY);
+                ExcessiveBoundsChecker(N_RETRY);
                 n = NextInt(N_PROMPT);
                 attempt++;
             } while (n <= 0);
 
             attempt = 0;
             do {
-                RetriesCheck(W_RETRY);
+                ExcessiveBoundsChecker(W_RETRY);
                 w = NextInt(W_PROMPT);
                 attempt++;
             } while (w <= 0);
 
             attempt = 0;
             do {
-                RetriesCheck(P_RETRY);
+                ExcessiveBoundsChecker(P_RETRY);
                 p = NextDouble(P_PROMPT);
                 attempt++;
             } while (p < 0 || p > 1);
         }
 
-        static void RetriesCheck(string notice) {
+        static void ExcessiveBoundsChecker(string notice) {
             if (attempt >= ALLOWANCE) {
                 throw new IOException(BELLIGERENT);
             }
