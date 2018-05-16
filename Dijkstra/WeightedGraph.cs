@@ -15,61 +15,93 @@ namespace Dijkstra {
         }
 
         public Path ShortestPath(int s, int f) {
-            Path path = new Path();
-
-            if (s == f) {
-                path.Nodes.Add(this.Nodes[s]);
-                path.Length = 0;
-                return path;
-            }
-
-            SortedSet<Node> unvisisted = new SortedSet<Node>();
-
-            foreach(Node node in Nodes) {
-                unvisisted.Add(node);
-            }
-
             Node current = Nodes[s];
             current.Path.Nodes.Add(current);
             current.Path.Length = 0;
 
-            HandleNode(current);
-            unvisisted.Remove(current);
+            while (current != Nodes[f] && current.Path.Length < int.MaxValue) {
+                //PrintUnvisited();
+                //PrintVisited();
+                //Console.WriteLine($"Considering: {current}");
 
-            //TODO: handle loop and figure out sort
+                foreach (Edge edge in Edges) {
+                    int tentative = current.Path.Length + edge.Weight;
 
-            path = Nodes[f].Path;
-
-            return path;
-        }
-
-        void HandleNode(Node current) {
-            foreach (Edge edge in Edges) {
-                int tentative = current.Path.Length + edge.Weight;
-
-                if (edge.From == current && !edge.To.Visited) {
-                    int previous = edge.To.Path.Length;
-
-                    if (tentative < previous) {
-                        edge.To.Path = current.Path;
-                        edge.To.Path.Nodes.Add(edge.To);
-
-                        edge.To.Path.Length = tentative;
+                    if (edge.From == current && !edge.To.Visited) {
+                        CheckAndUpdate(edge.To, current, tentative);
+                    }
+                    else if (edge.To == current && !edge.From.Visited) {
+                        CheckAndUpdate(edge.From, current, tentative);
                     }
                 }
-                else if (edge.To == current && !edge.From.Visited) {
-                    int previous = edge.From.Path.Length;
 
-                    if (tentative < previous) {
-                        edge.From.Path = current.Path;
-                        edge.From.Path.Nodes.Add(edge.From);
+                current.Visited = true;
+                current = GetNextUnvisited();
+            }
 
-                        edge.From.Path.Length = tentative;
-                    }
+            //Console.WriteLine("Done.");
+
+            return Nodes[f].Path;
+        }
+
+        void CheckAndUpdate(Node x, Node current, int tentative) {
+            int previous = x.Path.Length;
+
+            if (tentative < previous) {
+                x.Path.Nodes.Clear();
+
+                foreach (Node node in current.Path.Nodes) {
+                    x.Path.Nodes.Add(node);
+                }
+
+                x.Path.Nodes.Add(x);
+
+                x.Path.Length = tentative;
+            }
+
+            //Console.WriteLine($"{x.Path}\n");
+        }
+
+        Node GetNextUnvisited() {
+            Node output = new Node("SLUG");
+
+            foreach (Node node in Nodes) {
+                if (!node.Visited && node.CompareTo(output) < 0) {
+                    output = node;
                 }
             }
 
-            current.Visited = true;
+            return output;
+        }
+
+        void PrintUnvisited() {
+            char[] trimmings = { ',', ' ' };
+            string output = "Unvisited: {";
+
+            foreach (Node node in Nodes) {
+                if (!node.Visited) {
+                    output += $"{node}, ";
+                }
+            }
+
+            output = output.TrimEnd(trimmings) + "}";
+
+            Console.WriteLine(output);
+        }
+
+        void PrintVisited() {
+            char[] trimmings = { ',', ' ' };
+            string output = "Out: {";
+
+            foreach (Node node in Nodes) {
+                if (node.Visited) {
+                    output += $"{node}, ";
+                }
+            }
+
+            output = output.TrimEnd(trimmings) + "}";
+
+            Console.WriteLine(output);
         }
 
         public override string ToString() {
@@ -95,6 +127,30 @@ namespace Dijkstra {
             return graph;
         }
 
+        public static WeightedGraph GenerateTestGraph() {
+            WeightedGraph graph = new WeightedGraph();
+
+            for (int i = 0; i < 8; i++) {
+                graph.Nodes.Add(new Node(NameFor(i)));
+            }
+
+            graph.Edges.Add(new Edge(graph.Nodes[0], graph.Nodes[1], 5));
+            graph.Edges.Add(new Edge(graph.Nodes[0], graph.Nodes[2], 1));
+            graph.Edges.Add(new Edge(graph.Nodes[0], graph.Nodes[5], 3));
+            graph.Edges.Add(new Edge(graph.Nodes[0], graph.Nodes[6], 6));
+            graph.Edges.Add(new Edge(graph.Nodes[1], graph.Nodes[5], 2));
+            graph.Edges.Add(new Edge(graph.Nodes[2], graph.Nodes[3], 2));
+            graph.Edges.Add(new Edge(graph.Nodes[2], graph.Nodes[6], 1));
+            graph.Edges.Add(new Edge(graph.Nodes[3], graph.Nodes[4], 3));
+            graph.Edges.Add(new Edge(graph.Nodes[3], graph.Nodes[6], 5));
+            graph.Edges.Add(new Edge(graph.Nodes[3], graph.Nodes[7], 7));
+            graph.Edges.Add(new Edge(graph.Nodes[4], graph.Nodes[7], 4));
+            graph.Edges.Add(new Edge(graph.Nodes[5], graph.Nodes[6], 3));
+            graph.Edges.Add(new Edge(graph.Nodes[6], graph.Nodes[7], 3));
+
+            return graph;
+        }
+
         public static string NameFor(int index) {
             return index.ToString();
 
@@ -110,20 +166,20 @@ namespace Dijkstra {
 
     class PrintableList<T> : List<T> {
         public override string ToString() {
-            char[] trims = { ',', ' ' };
+            char[] trimmings = { ',', ' ' };
             string output = "{";
 
-            foreach(Object obj in this) {
+            foreach (Object obj in this) {
                 output += $"{obj.ToString()}, ";
             }
 
-            output = output.TrimEnd(trims) + "}";
+            output = output.TrimEnd(trimmings) + "}";
 
             return output;
         }
     }
 
-    class Path {
+    class Path : IComparable<Path> {
         public PrintableList<Node> Nodes { get; }
         public int Length { get; set; }
 
@@ -132,12 +188,35 @@ namespace Dijkstra {
             Length = int.MaxValue;
         }
 
+        public int CompareTo(Path path) {
+            if (this.Length < path.Length) {
+                return -1;
+            }
+            else if (this.Length == path.Length) {
+                return 0;
+            }
+            else {
+                return 1;
+            }
+        }
+
         public override string ToString() {
-            return null; //TODO: path.tostring
+            char[] trimmings = { '\n', '-', '>', ' ' };
+            string output = "\n   ";
+            int previous = 0;
+
+            foreach (Node node in Nodes) {
+                output += $"{node} ({node.Path.Length - previous})\n-> ";
+                previous = node.Path.Length;
+            }
+
+            output = $"{output.TrimEnd(trimmings)}\nLength: {this.Nodes[this.Nodes.Count - 1].Path.Length}";
+
+            return output;
         }
     }
 
-    class Node {
+    class Node : IComparable<Node> {
         public string Name { get; set; }
         public bool Visited { get; set; }
 
@@ -147,6 +226,14 @@ namespace Dijkstra {
             Name = name;
             Visited = false;
             Path = new Path();
+        }
+
+        public int CompareTo(Node node) {
+            if (this.Path.CompareTo(node.Path) == 0) {
+                return this.Name.CompareTo(node.Name);
+            }
+
+            return this.Path.CompareTo(node.Path);
         }
 
         public override string ToString() {

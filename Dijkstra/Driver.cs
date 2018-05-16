@@ -16,10 +16,10 @@ namespace Dijkstra {
         const String P_PROMPT = "Please enter the probability of each possible edge existing.\n> ";
         const String P_RETRY = "The probability must be between 0 and 1.";
 
-        const String S_PROMPT = "Please enter the ID of the start node.\n>";
+        const String S_PROMPT = "Please enter the ID of the start node.\n> ";
         const String S_RETRY = "That node doesn't exist.";
 
-        const String F_PROMPT = "Please enter the ID of the finish node.\n>";
+        const String F_PROMPT = "Please enter the ID of the finish node.\n> ";
         const String F_RETRY = "That node doesn't exist.";
 
         const String INT_RETRY = "Input must be an integer.";
@@ -58,11 +58,13 @@ namespace Dijkstra {
 
             Path path = graph.ShortestPath(s, f);
 
+            Console.WriteLine();
+
             if (path.Nodes.Count == 0) {
                 Console.WriteLine($"No path exists from {s} to {f}.");
             }
             else {
-                Console.WriteLine($"The shortest path length from {s} to {f} is {path.Length}: \n{path}");
+                Console.WriteLine($"The shortest path from {s} to {f} is: \n{path}");
             }
 
             Console.ReadLine();
@@ -122,10 +124,12 @@ namespace Dijkstra {
                 if (attempt >= ALLOWANCE) {
                     throw new IOException(BELLIGERENT);
                 }
+                Console.WriteLine();
                 Console.WriteLine(INT_RETRY);
                 Console.Write(prompt);
                 attempt++;
             }
+            Console.WriteLine();
         }
 
         static void NextDouble(String prompt, out double input) {
@@ -134,10 +138,12 @@ namespace Dijkstra {
                 if (attempt >= ALLOWANCE) {
                     throw new IOException(BELLIGERENT);
                 }
+                Console.WriteLine();
                 Console.WriteLine(DOUBLE_RETRY);
                 Console.Write(prompt);
                 attempt++;
             }
+            Console.WriteLine();
         }
     }
 }
