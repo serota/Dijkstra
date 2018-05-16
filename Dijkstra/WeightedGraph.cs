@@ -40,7 +40,6 @@ namespace Dijkstra {
             }
 
             //Console.WriteLine("Done.");
-
             return Nodes[f].Path;
         }
 
@@ -55,7 +54,6 @@ namespace Dijkstra {
                 }
 
                 x.Path.Nodes.Add(x);
-
                 x.Path.Length = tentative;
             }
 
@@ -85,7 +83,6 @@ namespace Dijkstra {
             }
 
             output = output.TrimEnd(trimmings) + "}";
-
             Console.WriteLine(output);
         }
 
@@ -100,7 +97,6 @@ namespace Dijkstra {
             }
 
             output = output.TrimEnd(trimmings) + "}";
-
             Console.WriteLine(output);
         }
 
@@ -174,7 +170,6 @@ namespace Dijkstra {
             }
 
             output = output.TrimEnd(trimmings) + "}";
-
             return output;
         }
     }
@@ -189,15 +184,7 @@ namespace Dijkstra {
         }
 
         public int CompareTo(Path path) {
-            if (this.Length < path.Length) {
-                return -1;
-            }
-            else if (this.Length == path.Length) {
-                return 0;
-            }
-            else {
-                return 1;
-            }
+            return this.Length.CompareTo(path.Length);
         }
 
         public override string ToString() {
@@ -211,7 +198,6 @@ namespace Dijkstra {
             }
 
             output = $"{output.TrimEnd(trimmings)}\nLength: {this.Nodes[this.Nodes.Count - 1].Path.Length}";
-
             return output;
         }
     }
