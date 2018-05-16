@@ -9,9 +9,12 @@ namespace Dijkstra {
         public PrintableList<Node> Nodes { get; }
         public PrintableList<Edge> Edges { get; }
 
+        public bool Verbose { get; set; }
+
         public WeightedGraph() {
             Nodes = new PrintableList<Node>();
             Edges = new PrintableList<Edge>();
+            Verbose = false;
         }
 
         public Path ShortestPath(int s, int f) {
@@ -20,9 +23,11 @@ namespace Dijkstra {
             current.Path.Length = 0;
 
             while (current != Nodes[f] && current.Path.Length < int.MaxValue) {
-                //Console.WriteLine($"Unvisited: {StringSetOf(true)}");
-                //Console.WriteLine($"Out: {StringSetOf(false)}");
-                //Console.WriteLine($"Considering: {current}");
+                if (Verbose) {
+                    Console.WriteLine($"Unvisited: {StringSetOf(true)}");
+                    Console.WriteLine($"Out: {StringSetOf(false)}");
+                    Console.WriteLine($"Considering: {current}");
+                }
 
                 foreach (Edge edge in Edges) {
                     if (edge.From == current && !edge.To.Visited) {
@@ -37,7 +42,10 @@ namespace Dijkstra {
                 current = GetNextUnvisited();
             }
 
-            //Console.WriteLine("Done.");
+            if (Verbose) {
+                Console.WriteLine("Done.");
+            }
+
             return Nodes[f].Path;
         }
 
@@ -56,7 +64,9 @@ namespace Dijkstra {
                 x.Path.Length = tentative;
             }
 
-            //Console.WriteLine($"{x.Path}\n");
+            if (Verbose) {
+                Console.WriteLine($"{x.Path}\n");
+            }
         }
 
         Node GetNextUnvisited() {

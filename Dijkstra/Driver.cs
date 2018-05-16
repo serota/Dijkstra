@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Dijkstra {
     class Driver {
+        const String V_PROMPT = "Verbose Mode? [y/N]\n> ";
+        const String V_RETRY = "Please answer yes or no.";
+
         const String N_PROMPT = "Please enter a number of nodes to generate.\n> ";
         const String N_RETRY = "The number of nodes must be a positive integer.";
 
@@ -29,6 +32,7 @@ namespace Dijkstra {
         const int ALLOWANCE = 5;
         static int attempt = 0;
 
+        static bool v = false;
         static int n = 0,
             w = 0,
             s = 0,
@@ -36,6 +40,14 @@ namespace Dijkstra {
         static double p = 0;
 
         static void Main(String[] args) {
+            try {
+                v = VerbosePrompt();
+            }
+            catch (IOException e) {
+                Console.WriteLine(e.Message + "  Exiting.");
+                Environment.Exit(0);
+            }
+
             try {
                 CollectGraphInputs();
             }
@@ -45,6 +57,7 @@ namespace Dijkstra {
             }
 
             WeightedGraph graph = WeightedGraph.GenerateRandomWeightedGraph(n, w, p);
+            graph.Verbose = v;
 
             Console.WriteLine(graph);
 
@@ -107,6 +120,39 @@ namespace Dijkstra {
                 NextDouble(P_PROMPT, out p);
                 attempt++;
             } while (p < 0 || p > 1);
+        }
+
+        static bool VerbosePrompt() {
+            attempt = 0;
+            while (true) {
+                RetriesCheck(V_RETRY);
+
+                Console.Write(V_PROMPT);
+                string answer = Console.ReadLine();
+
+                try {
+                    return YNParse(answer);
+                } catch (FormatException e) { }
+
+                attempt++;
+            }
+        }
+
+        static bool YNParse(string s) {
+            string[] affirmative = { "y", "yes", "t", "true", "on", "1" };
+            string[] negative = { "", "n", "no", "f", "false", "off", "0" };
+
+            string sanitized = s.ToLower().Trim();
+
+            if (affirmative.Contains(sanitized)) {
+                return true;
+            }
+            else if (negative.Contains(sanitized)) {
+                return false;
+            }
+            else {
+                throw new FormatException("String was not recognized as a valid y/n answer.");
+            }
         }
 
         static void RetriesCheck(String notice) {
