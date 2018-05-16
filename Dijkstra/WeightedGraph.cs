@@ -20,8 +20,8 @@ namespace Dijkstra {
             current.Path.Length = 0;
 
             while (current != Nodes[f] && current.Path.Length < int.MaxValue) {
-                //PrintUnvisited();
-                //PrintVisited();
+                //Console.WriteLine($"Unvisited: {StringSetOf(true)}");
+                //Console.WriteLine($"Out: {StringSetOf(false)}");
                 //Console.WriteLine($"Considering: {current}");
 
                 foreach (Edge edge in Edges) {
@@ -71,32 +71,18 @@ namespace Dijkstra {
             return output;
         }
 
-        void PrintUnvisited() {
+        string StringSetOf(bool unvisited) {
             char[] trimmings = { ',', ' ' };
-            string output = "Unvisited: {";
+            string output = "{";
 
             foreach (Node node in Nodes) {
-                if (!node.Visited) {
+                if (node.Visited ^ unvisited) {
                     output += $"{node}, ";
                 }
             }
 
             output = output.TrimEnd(trimmings) + "}";
-            Console.WriteLine(output);
-        }
-
-        void PrintVisited() {
-            char[] trimmings = { ',', ' ' };
-            string output = "Out: {";
-
-            foreach (Node node in Nodes) {
-                if (node.Visited) {
-                    output += $"{node}, ";
-                }
-            }
-
-            output = output.TrimEnd(trimmings) + "}";
-            Console.WriteLine(output);
+            return output;
         }
 
         public override string ToString() {
