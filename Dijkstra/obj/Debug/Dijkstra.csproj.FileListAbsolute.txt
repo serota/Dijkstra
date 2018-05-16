@@ -1,0 +1,7 @@
+C:\Users\Bifrons\source\repos\Dijkstra\Dijkstra\bin\Debug\Dijkstra.exe.config
+C:\Users\Bifrons\source\repos\Dijkstra\Dijkstra\bin\Debug\Dijkstra.exe
+C:\Users\Bifrons\source\repos\Dijkstra\Dijkstra\bin\Debug\Dijkstra.pdb
+C:\Users\Bifrons\source\repos\Dijkstra\Dijkstra\obj\Debug\Dijkstra.csprojResolveAssemblyReference.cache
+C:\Users\Bifrons\source\repos\Dijkstra\Dijkstra\obj\Debug\Dijkstra.csproj.CoreCompileInputs.cache
+C:\Users\Bifrons\source\repos\Dijkstra\Dijkstra\obj\Debug\Dijkstra.exe
+C:\Users\Bifrons\source\repos\Dijkstra\Dijkstra\obj\Debug\Dijkstra.pdb
