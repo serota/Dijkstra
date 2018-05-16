@@ -136,7 +136,7 @@ namespace Dijkstra {
             bool output = false;
 
             Console.Write(prompt);
-            while (!YNParse(Console.ReadLine(), out output)) {
+            while (!YN_TryParse(Console.ReadLine(), out output)) {
                 if (attempt >= ALLOWANCE) {
                     throw new IOException(BELLIGERENT);
                 }
@@ -187,7 +187,7 @@ namespace Dijkstra {
             return output;
         }
 
-        static bool YNParse(string s, out bool b) {
+        static bool YN_TryParse(string s, out bool b) {
             string[] affirmative = { "y", "yes", "t", "true", "on", "1" };
             string[] negative = { "", "n", "no", "f", "false", "off", "0" };
 
