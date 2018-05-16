@@ -25,13 +25,11 @@ namespace Dijkstra {
                 //Console.WriteLine($"Considering: {current}");
 
                 foreach (Edge edge in Edges) {
-                    int tentative = current.Path.Length + edge.Weight;
-
                     if (edge.From == current && !edge.To.Visited) {
-                        CheckAndUpdate(edge.To, current, tentative);
+                        CheckAndUpdate(edge.To, current, edge);
                     }
                     else if (edge.To == current && !edge.From.Visited) {
-                        CheckAndUpdate(edge.From, current, tentative);
+                        CheckAndUpdate(edge.From, current, edge);
                     }
                 }
 
@@ -43,8 +41,9 @@ namespace Dijkstra {
             return Nodes[f].Path;
         }
 
-        void CheckAndUpdate(Node x, Node current, int tentative) {
+        void CheckAndUpdate(Node x, Node current, Edge edge) {
             int previous = x.Path.Length;
+            int tentative = current.Path.Length + edge.Weight;
 
             if (tentative < previous) {
                 x.Path.Nodes.Clear();
@@ -61,7 +60,7 @@ namespace Dijkstra {
         }
 
         Node GetNextUnvisited() {
-            Node output = new Node("SLUG");
+            Node output = new Node("-SLUG-");
 
             foreach (Node node in Nodes) {
                 if (!node.Visited && node.CompareTo(output) < 0) {
