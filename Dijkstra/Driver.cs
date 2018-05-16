@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 
 namespace Dijkstra {
     class Driver {
-        const String V_PROMPT = "Verbose Mode? [y/N]\n> ";
-        const String V_RETRY = "Please answer yes or no.";
+        const string V_PROMPT = "Verbose Mode? [y/N]\n> ";
 
-        const String N_PROMPT = "Please enter a number of nodes to generate.\n> ";
-        const String N_RETRY = "The number of nodes must be a positive integer.";
+        const string N_PROMPT = "Please enter a number of nodes to generate.\n> ";
+        const string N_RETRY = "The number of nodes must be a positive integer.";
 
-        const String W_PROMPT = "Please enter the maximum possible edge weight.\n> ";
-        const String W_RETRY = "The maximum weight must be a positive integer.";
+        const string W_PROMPT = "Please enter the maximum possible edge weight.\n> ";
+        const string W_RETRY = "The maximum weight must be a positive integer.";
 
-        const String P_PROMPT = "Please enter the probability of each possible edge existing.\n> ";
-        const String P_RETRY = "The probability must be between 0 and 1.";
+        const string P_PROMPT = "Please enter the probability of each possible edge existing.\n> ";
+        const string P_RETRY = "The probability must be between 0 and 1.";
 
-        const String S_PROMPT = "Please enter the ID of the start node.\n> ";
-        const String S_RETRY = "That node doesn't exist.";
+        const string S_PROMPT = "Please enter the ID of the start node.\n> ";
+        const string S_RETRY = "That node doesn't exist.";
 
-        const String F_PROMPT = "Please enter the ID of the finish node.\n> ";
-        const String F_RETRY = "That node doesn't exist.";
+        const string F_PROMPT = "Please enter the ID of the finish node.\n> ";
+        const string F_RETRY = "That node doesn't exist.";
 
-        const String INT_RETRY = "Input must be an integer.";
-        const String DOUBLE_RETRY = "Input must be a decimal number.";
-        const String BELLIGERENT = "User can't follow directions.";
+        const string YN_RETRY = "Input must be a yes or no answer.";
+        const string INT_RETRY = "Input must be an integer.";
+        const string DOUBLE_RETRY = "Input must be a decimal number.";
+        const string BELLIGERENT = "User can't follow directions.";
 
         const int ALLOWANCE = 5;
         static int attempt = 0;
@@ -39,9 +39,9 @@ namespace Dijkstra {
             f = 0;
         static double p = 0;
 
-        static void Main(String[] args) {
+        static void Main(string[] args) {
             try {
-                v = VerbosePrompt();
+                v = NextYN(V_PROMPT);
             }
             catch (IOException e) {
                 Console.WriteLine(e.Message + "  Exiting.");
@@ -87,14 +87,14 @@ namespace Dijkstra {
             attempt = 0;
             do {
                 RetriesCheck(S_RETRY);
-                NextInt(S_PROMPT, out s);
+                s = NextInt(S_PROMPT);
                 attempt++;
             } while (s < 0 || s >= n);
 
             attempt = 0;
             do {
                 RetriesCheck(F_RETRY);
-                NextInt(F_PROMPT, out f);
+                f = NextInt(F_PROMPT);
                 attempt++;
             } while (f < 0 || f >= n);
         }
@@ -103,60 +103,26 @@ namespace Dijkstra {
             attempt = 0;
             do {
                 RetriesCheck(N_RETRY);
-                NextInt(N_PROMPT, out n);
+                n = NextInt(N_PROMPT);
                 attempt++;
             } while (n <= 0);
 
             attempt = 0;
             do {
                 RetriesCheck(W_RETRY);
-                NextInt(W_PROMPT, out w);
+                w = NextInt(W_PROMPT);
                 attempt++;
             } while (w <= 0);
 
             attempt = 0;
             do {
                 RetriesCheck(P_RETRY);
-                NextDouble(P_PROMPT, out p);
+                p = NextDouble(P_PROMPT);
                 attempt++;
             } while (p < 0 || p > 1);
         }
 
-        static bool VerbosePrompt() {
-            attempt = 0;
-            while (true) {
-                RetriesCheck(V_RETRY);
-
-                Console.Write(V_PROMPT);
-                string answer = Console.ReadLine();
-                Console.WriteLine();
-
-                try {
-                    return YNParse(answer);
-                } catch (FormatException e) { }
-
-                attempt++;
-            }
-        }
-
-        static bool YNParse(string s) {
-            string[] affirmative = { "y", "yes", "t", "true", "on", "1" };
-            string[] negative = { "", "n", "no", "f", "false", "off", "0" };
-
-            string sanitized = s.ToLower().Trim();
-
-            if (affirmative.Contains(sanitized)) {
-                return true;
-            }
-            else if (negative.Contains(sanitized)) {
-                return false;
-            }
-            else {
-                throw new FormatException("String was not recognized as a valid y/n answer.");
-            }
-        }
-
-        static void RetriesCheck(String notice) {
+        static void RetriesCheck(string notice) {
             if (attempt >= ALLOWANCE) {
                 throw new IOException(BELLIGERENT);
             }
@@ -165,9 +131,30 @@ namespace Dijkstra {
                 Console.WriteLine(notice);
         }
 
-        static void NextInt(String prompt, out int input) {
+        static bool NextYN(string prompt) {
+            bool output = false;
+
             Console.Write(prompt);
-            while (!int.TryParse(Console.ReadLine(), out input)) {
+            while (!YNParse(Console.ReadLine(), out output)) {
+                if (attempt >= ALLOWANCE) {
+                    throw new IOException(BELLIGERENT);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine(YN_RETRY);
+                Console.Write(prompt);
+                attempt++;
+            }
+            Console.WriteLine();
+
+            return output;
+        }
+
+        static int NextInt(string prompt) {
+            int output = 0;
+
+            Console.Write(prompt);
+            while (!int.TryParse(Console.ReadLine(), out output)) {
                 if (attempt >= ALLOWANCE) {
                     throw new IOException(BELLIGERENT);
                 }
@@ -177,11 +164,15 @@ namespace Dijkstra {
                 attempt++;
             }
             Console.WriteLine();
+
+            return output;
         }
 
-        static void NextDouble(String prompt, out double input) {
+        static double NextDouble(string prompt) {
+            double output = 0;
+
             Console.Write(prompt);
-            while (!double.TryParse(Console.ReadLine(), out input)) {
+            while (!double.TryParse(Console.ReadLine(), out output)) {
                 if (attempt >= ALLOWANCE) {
                     throw new IOException(BELLIGERENT);
                 }
@@ -191,6 +182,28 @@ namespace Dijkstra {
                 attempt++;
             }
             Console.WriteLine();
+
+            return output;
+        }
+
+        static bool YNParse(string s, out bool b) {
+            string[] affirmative = { "y", "yes", "t", "true", "on", "1" };
+            string[] negative = { "", "n", "no", "f", "false", "off", "0" };
+
+            string sanitized = s.ToLower().Trim();
+
+            if (affirmative.Contains(sanitized)) {
+                b = true;
+                return true;
+            }
+            else if (negative.Contains(sanitized)) {
+                b = false;
+                return true;
+            }
+            else {
+                b = false;
+                return false;
+            }
         }
     }
 }
