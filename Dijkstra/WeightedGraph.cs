@@ -196,7 +196,7 @@ namespace Dijkstra {
                 previous = node.Path.Length;
             }
 
-            output = $"{output.TrimEnd(trimmings)}\nLength: {this.Nodes[this.Nodes.Count - 1].Path.Length}";
+            output = $"{output.TrimEnd(trimmings)}\nLength: {Length}";
             return output;
         }
     }
