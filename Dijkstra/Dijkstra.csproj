@@ -42,9 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WeightedGraph.cs" />
-    <Compile Include="Driver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripts\Collections\PrintableList.cs" />
+    <Compile Include="Scripts\Graph\Edge.cs" />
+    <Compile Include="Scripts\Graph\GraphDefinition.cs" />
+    <Compile Include="Scripts\Graph\Node.cs" />
+    <Compile Include="Scripts\Graph\Path.cs" />
+    <Compile Include="Scripts\Graph\WeightedGraph.cs" />
+    <Compile Include="Scripts\Graph\WeightedGraphExtensions.cs" />
+    <Compile Include="Scripts\InputStateMachine\IInputState.cs" />
+    <Compile Include="Scripts\InputStateMachine\InputStateMachine.cs" />
+    <Compile Include="Scripts\InputStateMachine\States\GraphDefinitionState.cs" />
+    <Compile Include="Scripts\InputStateMachine\States\PathDefinitionState.cs" />
+    <Compile Include="Scripts\InputStateMachine\States\VerboseModeState.cs" />
+    <Compile Include="Scripts\Program.cs" />
+    <Compile Include="Scripts\Utilities\InputParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
